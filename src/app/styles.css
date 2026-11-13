@@ -992,3 +992,94 @@ footer .mono {
     font-size: 24px;
   }
 }
+
+/* ===== 本地双人协作模式 ===== */
+.mode-switch {
+  display: inline-flex;
+  border: 1px solid #2c3a46;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 14px;
+}
+.mode-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #758392;
+  font-size: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+}
+.mode-switch button + button {
+  border-left: 1px solid #2c3a46;
+}
+.mode-switch button.active {
+  background: #1d3038;
+  color: #bfeee0;
+}
+.mode-switch button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.player-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  box-shadow: 0 0 8px currentColor;
+}
+.player-vitals {
+  border-left: 3px solid transparent;
+}
+.player-vitals.p1 {
+  border-left-color: #cdfedc;
+}
+.player-vitals.p2 {
+  border-left-color: #9ecbff;
+}
+.downed-tag {
+  font-style: normal;
+  color: #ff827d;
+  border: 1px solid rgba(255, 130, 125, 0.5);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  font-size: 9px;
+}
+.bar.rescue {
+  height: 5px;
+}
+.bar.rescue i {
+  background: linear-gradient(90deg, #ff827d, #ffd166);
+}
+.experience-stack.coop {
+  display: flex;
+  flex-direction: column;
+}
+.experience-stack .experience {
+  flex: 1;
+}
+.player-arsenal {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #2a3742;
+}
+.player-arsenal.p2 .weapon-icon {
+  filter: hue-rotate(160deg);
+}
+.coop-result-levels {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  font-size: 11px;
+  margin: 10px 0 4px;
+}
+@media (max-width: 1180px) {
+  .mode-switch button {
+    padding: 5px 7px;
+  }
+}

@@ -3,7 +3,7 @@ export function StatsPanel({ doc }: { doc: GameDoc }) {
   return (
     <section className="panel stats">
       <div className="section-caption">
-        <span>本局遥测</span>
+        <span>本局遥测{doc.mode === "coop" ? " · 全队汇总" : ""}</span>
         <span className="status-dot" />
       </div>
       <div className="stat-row">
@@ -25,6 +25,10 @@ export function StatsPanel({ doc }: { doc: GameDoc }) {
       <div className="stat-row">
         <span>已受伤害</span>
         <strong className="mono">{Math.round(doc.stats.taken)}</strong>
+      </div>
+      <div className="stat-row">
+        <span>治疗回复</span>
+        <strong className="mono">{Math.round(doc.stats.healed)}</strong>
       </div>
     </section>
   );

@@ -1,13 +1,14 @@
-import type { GameDoc, WeaponId, Vec } from "../../../shared/types";
+import type { GameDoc, PlayerId, Vec, WeaponId } from "../../../shared/types";
 export function fire(
   doc: GameDoc,
+  owner: PlayerId,
   weapon: WeaponId,
   angle: number,
   damage: number,
   speed: number,
   pierce: number,
-  origin: Vec = doc.player,
 ): void {
+  const origin = doc.players[owner];
   doc.bullets.push({
     id: doc.nextId++,
     x: origin.x,
@@ -17,18 +18,20 @@ export function fire(
     radius: weapon === "nova" ? 6 : 4,
     damage,
     life: weapon === "orbit" ? 1.25 : 2.1,
-    owner: "player",
+    owner,
     weapon,
     pierce,
     hit: [],
   });
 }
-export function nearestTarget(doc: GameDoc): Vec | undefined {
+/** 自动索敌以该角色自身位置为基准，两名玩家可以分别锁定不同目标。 */
+export function nearestTarget(doc: GameDoc, owner: PlayerId): Vec | undefined {
+  const origin = doc.players[owner];
   let best: Vec | undefined,
     bestSquared = Infinity;
   for (const e of doc.enemies) {
     if (e.hp <= 0) continue;
-    const n = (e.x - doc.player.x) ** 2 + (e.y - doc.player.y) ** 2;
+    const n = (e.x - origin.x) ** 2 + (e.y - origin.y) ** 2;
     if (n < bestSquared) {
       best = e;
       bestSquared = n;

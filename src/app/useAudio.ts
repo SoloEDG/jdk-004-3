@@ -4,12 +4,13 @@ export function useAudio(doc: GameDoc) {
   const [muted, setMuted] = useState(true);
   const audio = useRef<AudioContext | null>(null);
   const previous = useRef({ kills: 0, taken: 0, level: 1 });
+  const topLevel = Math.max(...doc.panels.map((p) => p.level));
   useEffect(() => {
     const p = previous.current;
     const changed =
       doc.stats.taken > p.taken
         ? "hurt"
-        : doc.level > p.level
+        : topLevel > p.level
           ? "level"
           : doc.stats.kills > p.kills
             ? "kill"
@@ -17,7 +18,7 @@ export function useAudio(doc: GameDoc) {
     previous.current = {
       kills: doc.stats.kills,
       taken: doc.stats.taken,
-      level: doc.level,
+      level: topLevel,
     };
     if (!changed || muted) return;
     try {
@@ -43,7 +44,7 @@ export function useAudio(doc: GameDoc) {
     } catch {
       /* Audio is optional on restricted browsers. */
     }
-  }, [doc.stats.kills, doc.stats.taken, doc.level, muted]);
+  }, [doc.stats.kills, doc.stats.taken, topLevel, muted]);
   useEffect(
     () => () => {
       void audio.current?.close();

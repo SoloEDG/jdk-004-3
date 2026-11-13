@@ -7,11 +7,13 @@ export function ResultDialog({
   doc: GameDoc;
   restart: () => void;
 }) {
+  const topLevel = Math.max(...doc.panels.map((p) => p.level));
   return (
     <div className="overlay">
       <div className="result-dialog">
         <div className="eyebrow">
-          MISSION {doc.victory ? "COMPLETE" : "ENDED"}
+          MISSION {doc.victory ? "COMPLETE" : "ENDED"} ·{" "}
+          {doc.mode === "coop" ? "双人协作" : "单人行动"}
         </div>
         <h2>{doc.victory ? "信号已送达。" : "信号暂时中断。"}</h2>
         <p>每一次坠落，都是下一次进化的起点。</p>
@@ -25,10 +27,19 @@ export function ResultDialog({
             <small>击败敌人</small>
           </div>
           <div>
-            <strong>{doc.level}</strong>
-            <small>最终等级</small>
+            <strong>{topLevel}</strong>
+            <small>最高等级</small>
           </div>
         </div>
+        {doc.mode === "coop" && (
+          <div className="coop-result-levels">
+            {doc.panels.map((panel) => (
+              <span key={panel.id} style={{ color: panel.color }}>
+                {panel.name} · LV.{panel.level} · 击杀 {panel.stats.kills}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="damage-breakdown">
           {Object.entries(doc.stats.byWeapon).map(([key, value]) => (
             <div key={key}>

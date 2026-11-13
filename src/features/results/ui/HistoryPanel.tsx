@@ -24,6 +24,7 @@ export function HistoryPanel({
             .map((r) => (
               <div className="history-row" key={r.id}>
                 <span>{r.victory ? "撤离成功" : "信号中断"}</span>
+                <span className="badge">{r.mode === "coop" ? "双人" : "单人"}</span>
                 <span>{formatTime(r.duration)}</span>
                 <span>波次 {r.wave}</span>
                 <span>{r.kills} 击杀</span>

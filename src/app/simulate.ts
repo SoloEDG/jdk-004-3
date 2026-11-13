@@ -4,13 +4,13 @@ import { stepWaves } from "../features/waves";
 import { stepArsenal } from "../features/arsenal";
 import { stepProgression } from "../features/progression";
 import { stepResults } from "../features/results";
-export function simulate(doc: GameDoc, input: Input, dt: number) {
+/** 两名玩家共享同一份敌潮、弹幕与掉落，输入按面板 id 分别传入。 */
+export function simulate(doc: GameDoc, inputs: Input[], dt: number) {
   if (doc.phase !== "playing") return;
   doc.time += dt;
   stepWaves(doc, dt);
-  const shots = stepArsenal(doc, input, dt);
-  const events = stepCombat(doc, input, dt);
-  events.shots += shots;
+  const events = stepCombat(doc, inputs, dt);
+  stepArsenal(doc, inputs, dt, events.perPlayer);
   stepProgression(doc, events, dt);
   stepResults(doc, events);
 }

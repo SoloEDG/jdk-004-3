@@ -15,11 +15,17 @@ function isRecord(value: unknown): value is RunRecord {
     typeof r.victory === "boolean"
   );
 }
+/** v1 时代的档案没有模式字段，统一补视为单人，避免旧存档被过滤。 */
+function normalize(r: RunRecord): RunRecord {
+  return { ...r, mode: r.mode === "coop" ? "coop" : "solo" };
+}
 export function loadRecords(): RunRecord[] {
   try {
     if (typeof window === "undefined") return [];
     const raw = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    return Array.isArray(raw) ? raw.filter(isRecord).slice(0, 20) : [];
+    return Array.isArray(raw)
+      ? raw.filter(isRecord).slice(0, 20).map(normalize)
+      : [];
   } catch {
     return [];
   }

@@ -1,19 +1,22 @@
-import type { GameDoc, WeaponId } from "../../../shared/types";
+import type { GameDoc, PlayerPanel, WeaponId } from "../../../shared/types";
 const names: Record<WeaponId, [string, string, string]> = {
   pulse: ["脉冲射线", "PULSE RIFLE", "⌁"],
   orbit: ["轨道刃", "ORBITAL BLADE", "◎"],
   nova: ["新星爆发", "NOVA BURST", "✳"],
 };
-export function ArsenalPanel({ doc }: { doc: GameDoc }) {
+function PlayerArsenal({ panel }: { panel: PlayerPanel }) {
   return (
-    <section className="panel">
+    <div className={`player-arsenal p${panel.id + 1}`}>
       <div className="section-caption">
-        <span>武器系统</span>
-        <span className="mono muted">{doc.weapons.length} / 3</span>
+        <span>
+          <i className="player-dot" style={{ background: panel.color }} />
+          {panel.name}
+        </span>
+        <span className="mono muted">{panel.weapons.length} / 3</span>
       </div>
       <div className="weapons">
         {(["pulse", "orbit", "nova"] as WeaponId[]).map((id) => {
-          const w = doc.weapons.find((w) => w.id === id);
+          const w = panel.weapons.find((w) => w.id === id);
           return (
             <div className={`weapon ${w ? "" : "locked"}`} key={id}>
               <div className={`weapon-icon ${id}`}>{names[id][2]}</div>
@@ -35,10 +38,23 @@ export function ArsenalPanel({ doc }: { doc: GameDoc }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+export function ArsenalPanel({ doc }: { doc: GameDoc }) {
+  return (
+    <section className="panel">
+      <div className="section-caption">
+        <span>武器系统</span>
+        <span className="mono muted">{doc.mode === "coop" ? "双人配装" : "单人配装"}</span>
+      </div>
+      {doc.panels.map((panel) => (
+        <PlayerArsenal key={panel.id} panel={panel} />
+      ))}
       <div className="hint">
-        ↗ 自动锁定最近目标
+        ↗ 各自自动锁定最近目标
         <br />
-        <span>升级时选择新武器，构筑你的火力组合。</span>
+        <span>升级时选择新武器，两名角色独立构筑火力组合。</span>
       </div>
     </section>
   );

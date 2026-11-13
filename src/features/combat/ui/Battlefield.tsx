@@ -4,10 +4,10 @@ import { WIDTH, HEIGHT } from "../../../shared/types";
 import { renderScene } from "../lib/renderScene";
 export function Battlefield({
   doc,
-  input,
+  inputs,
 }: {
   doc: GameDoc;
-  input: React.RefObject<Input>;
+  inputs: React.RefObject<Input[]>;
 }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -21,18 +21,22 @@ export function Battlefield({
       ref={canvas}
       width={WIDTH}
       height={HEIGHT}
-      aria-label="弹幕战场，使用 WASD 或方向键移动"
+      aria-label="弹幕战场，玩家一使用 WASD，玩家二使用方向键"
       onPointerMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
-        input.current.aim = {
+        // 鼠标指向只交接给玩家一，玩家二保持自动索敌。
+        inputs.current[0].aim = {
           x: ((e.clientX - r.left) * WIDTH) / r.width,
           y: ((e.clientY - r.top) * HEIGHT) / r.height,
         };
       }}
-      onPointerDown={(e) => {e.currentTarget.setPointerCapture(e.pointerId); input.current.firing = true;}}
-      onPointerUp={() => (input.current.firing = false)}
-      onPointerCancel={() => (input.current.firing = false)}
-      onLostPointerCapture={() => (input.current.firing = false)}
+      onPointerDown={(e) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        inputs.current[0].firing = true;
+      }}
+      onPointerUp={() => (inputs.current[0].firing = false)}
+      onPointerCancel={() => (inputs.current[0].firing = false)}
+      onLostPointerCapture={() => (inputs.current[0].firing = false)}
     />
   );
 }
